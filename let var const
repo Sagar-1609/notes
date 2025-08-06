@@ -1,0 +1,37 @@
+var:
+This is the OG way to make a variable in JavaScript. It doesn’t really care about blocks (like if statements or loops) – 
+it’s available all over the function. But that can get messy sometimes, so it’s kind of old school now.
+
+let:
+This is the cooler, more modern way. It sticks to its own block, meaning if you set it inside 
+a loop or an if block, it’s only there. And you can change it later if you need to.
+
+const:
+Think of this like your ride-or-die variable – once you set it, it can’t be swapped out
+. It’s locked in. But if it’s an object, you can still mess with the insides, just not replace the whole thing.
+
+
+
+Hoisting & Temporal Dead Zone (TDZ)
+
+console.log(a); // undefined
+var a = 10;
+
+console.log(b); // ❌ Error! (TDZ)
+let b = 20;
+
+
+Re-declaration & Reassignment
+var is super chill with being re-declared. Like, "Oh, you wanna change me? Cool, no problem." But this can cause bugs.
+let doesn’t let you re-declare in the same scope, but you can change its value.
+const is like, “Nah, bro, once you give me a value, I ain’t changing.” But if it’s an object, you can change the inside stuff.
+Example:
+]
+var x = 5;
+var x = 10; // No problem
+
+let y = 15;
+let y = 25; // ❌ Error! You can’t re-declare let
+
+const z = 30;
+z = 40; // ❌ Error! You can’t reassign a const
