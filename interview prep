@@ -121,3 +121,152 @@ Preventing unnecessary recalculations on every render.
 
 Key point (interview line):
 "useMemo expensive calculation ka result cache karta hai taaki woh har render pe dobara compute na ho."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Next.js API Routes — Notes
+🔹 What are API Routes?
+
+Next.js ke andar built-in backend hota hai.
+
+pages/api/* ke andar banaye gaye files automatically API endpoints ban jaate hain.
+
+Har file ek API route ko represent karti hai (jaise pages/api/users.js → /api/users).
+
+Yeh serverless functions ke tarah run hote hain (Vercel deploy pe har route ek lambda hota hai).
+
+🔹 How it Works
+
+Request aata hai → Next.js dekhta hai pages/api/ ke andar matching file.
+
+Waha pe ek handler function likha hota hai:
+
+export default function handler(req, res) {
+  if (req.method === "GET") {
+    res.status(200).json({ msg: "GET request" });
+  }
+}
+
+🔹 CRUD Example (Users API)
+➡️ GET (Read users)
+// pages/api/users.js
+let users = [{ id: 1, name: "Sagar" }];
+
+export default function handler(req, res) {
+  if (req.method === "GET") {
+    res.status(200).json(users);
+  }
+}
+
+➡️ POST (Create user)
+if (req.method === "POST") {
+  const newUser = { id: Date.now(), ...req.body };
+  users.push(newUser);
+  res.status(201).json(newUser);
+}
+
+➡️ PUT (Update user)
+if (req.method === "PUT") {
+  const { id, name } = req.body;
+  users = users.map(u => (u.id === id ? { ...u, name } : u));
+  res.status(200).json({ msg: "User updated" });
+}
+
+➡️ DELETE (Delete user)
+if (req.method === "DELETE") {
+  const { id } = req.body;
+  users = users.filter(u => u.id !== id);
+  res.status(200).json({ msg: "User deleted" });
+}
+
+🔹 Key Points to Remember
+
+req.method → HTTP method check karna hota hai (GET, POST, PUT, DELETE).
+
+req.body → client se data aata hai (JSON).
+
+res.status().json() → response bhejna.
+
+Deployment pe each API route = serverless function (scales automatically).
+
+Good for small backend logic (auth, db connect, forms, etc.).
+
+⚡ TLDR: Next.js API routes = lightweight backend without separate Express/Node server. CRUD ke liye bas ek file banao inside pages/api/, methods ke hisaab se handle karo.
+
+Bhai, chaahta hai mai isko ekdum interview-ready bullet notes (ek page revision) banaa du jaise cheat sheet?
+
+You said:
+yesssss
+ChatGPT said:
+
+Perfect 🚀 Here are the main notes for your question:
+
+🔹 Next.js API Routes & CRUD Notes
+1. What are API Routes in Next.js?
+
+Next.js lets you create backend APIs inside the same project (no need for separate Express server).
+
+You create files inside /pages/api/ → each file becomes an API endpoint.
+
+Runs only on the server-side (never exposed to client).
+
+2. How Next.js Handles API Routes?
+
+Any file inside /pages/api/ is treated as an API endpoint.
+
+Export a default function (req, res) → it handles the request.
+
+Supports all HTTP methods: GET, POST, PUT, DELETE.
+
+3. Simple CRUD API Example
+📂 Folder structure:
+pages/
+ └── api/
+      └── users.js
+
+users.js
+let users = [];
+
+export default function handler(req, res) {
+  if (req.method === "GET") {
+    res.status(200).json(users); // Read
+  } 
+  else if (req.method === "POST") {
+    const newUser = req.body;
+    users.push(newUser); // Create
+    res.status(201).json(newUser);
+  } 
+  else if (req.method === "PUT") {
+    const { id, name } = req.body;
+    users = users.map(u => (u.id === id ? { ...u, name } : u)); // Update
+    res.status(200).json({ message: "User updated" });
+  } 
+  else if (req.method === "DELETE") {
+    const { id } = req.body;
+    users = users.filter(u => u.id !== id); // Delete
+    res.status(200).json({ message: "User deleted" });
+  } 
+  else {
+    res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+}
+
+4. Key Points to Remember
+
+✅ API routes run only on server → safe for secrets.
+✅ Great for small projects, form submissions, authentication, etc.
+✅ For large apps, you might still use Express/Nest.js with Next.js.
+✅ req.body requires middleware like body-parser or Next.js built-in support for JSON.
