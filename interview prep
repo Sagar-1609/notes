@@ -51,3 +51,73 @@ SEO friendly (page pehle se content ke saath hota hai).
 Data frequently change ho toh rebuild karna padta hai.
 
 Real-time/dynamic data ke liye suitable nahi.
+
+
+
+
+
+
+
+
+2nd question
+⚡ useEffect vs useLayoutEffect vs useMemo (Deep Dive)
+🔹 1. useEffect
+
+Kaise kaam karta hai:
+
+Ye async hota hai. React pehle DOM update karta hai → phir browser paint karta hai → uske baad useEffect chalega.
+
+Matlab UI user ko turant dikh jata hai, side-effect baad mein run hota hai.
+
+Use cases:
+
+API calls (fetch data).
+
+Event listeners (window resize, scroll).
+
+Subscriptions (WebSocket, Firebase).
+
+Timers (setTimeout, setInterval).
+
+LocalStorage read/write.
+
+Key point (interview line):
+"useEffect UI ke render hone ke baad run hota hai. Ye async hai aur UI ko block nahi karta."
+
+🔹 2. useLayoutEffect
+
+Kaise kaam karta hai:
+
+Ye sync hota hai. DOM update ho gaya, lekin browser paint karne se pehle run ho jata hai.
+
+Agar isme heavy kaam kar diya toh UI block hoga (flicker ya lag feel hoga).
+
+Use cases:
+
+DOM measurement (width, height, scroll position).
+
+Screen pe koi UI dikhne se pehle adjust karna (jaise modal ke position fix karna).
+
+CSS transitions/flicker prevent karna.
+
+Key point (interview line):
+"useLayoutEffect DOM update hone ke baad aur paint hone se pehle run hota hai. Ye sync hai aur mostly DOM measurement ya flicker avoid karne ke liye use hota hai."
+
+🔹 3. useMemo
+
+Kaise kaam karta hai:
+
+Ye side-effects ke liye nahi hai, ye optimization hook hai.
+
+Ye ek function run karke uska result memoize karta hai. Agar dependencies change nahi hoti toh woh purana cached result return karta hai.
+
+Use cases:
+
+Expensive calculations (sorting, filtering, big loops).
+
+Derived state (jab state se ek aur naya computed value nikalna ho).
+
+Preventing unnecessary recalculations on every render.
+
+Key point (interview line):
+"useMemo expensive calculation ka result cache karta hai taaki woh har render pe dobara compute na ho."
