@@ -1,0 +1,53 @@
+🔹 Client-Side Rendering (CSR)
+
+Jab user request bhejta hai, server ek basic HTML file deta hai jisme <div id="root"></div> hota hai + JS bundle ka link.
+
+Content tabhi dikhai deta hai jab JavaScript browser pe run hoti hai aur API se data fetch karti hai.
+
+✅ Pros:
+
+Development easy aur fast.
+
+Dynamic UI/interaction ke liye best.
+
+❌ Cons:
+
+SEO weak (initial HTML blank hota hai).
+
+First load slow (pehle blank, phir loader, phir data).
+
+🔹 Server-Side Rendering (SSR)
+
+Jab user request bhejta hai, server DB/API se data fetch karta hai aur ek ready HTML page bana ke bhejta hai.
+
+User ko directly filled page milta hai.
+
+✅ Pros:
+
+SEO friendly (search engines ko ready HTML milta hai).
+
+First load fast.
+
+❌ Cons:
+
+Har request pe server load zyada hota hai.
+
+High traffic mai slow ho sakta hai.
+
+🔹 Static Site Generation (SSG)
+
+Pages build time pe hi generate ho jaate hain aur CDN pe store hote hain.
+
+Jab user request bhejta hai, woh pre-generated HTML page direct serve hota hai.
+
+✅ Pros:
+
+Super fast performance (CDN se direct HTML).
+
+SEO friendly (page pehle se content ke saath hota hai).
+
+❌ Cons:
+
+Data frequently change ho toh rebuild karna padta hai.
+
+Real-time/dynamic data ke liye suitable nahi.
