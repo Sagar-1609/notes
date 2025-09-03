@@ -125,17 +125,6 @@ Key point (interview line):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 Next.js API Routes — Notes
 🔹 What are API Routes?
 
@@ -270,3 +259,224 @@ export default function handler(req, res) {
 ✅ Great for small projects, form submissions, authentication, etc.
 ✅ For large apps, you might still use Express/Nest.js with Next.js.
 ✅ req.body requires middleware like body-parser or Next.js built-in support for JSON.
+
+
+
+
+
+
+
+
+
+
+
+🔹 1. Synchronous Code (Blocking code)
+
+Matlab ek kaam khatam hone tak agla kaam ruk jaata hai.
+
+Ek line execute hogi → uske complete hone ke baad hi agla line chalega.
+
+Node.js single-threaded hai, toh agar sync code mai koi heavy task (like file read, DB query) hogaya → pura thread block ho jaata hai → baaki requests ruk jaati hain.
+
+👉 Example:
+
+const fs = require("fs");
+
+// Sync file read
+const data = fs.readFileSync("file.txt", "utf8");
+console.log("File data:", data);
+
+console.log("This will run after file read is done.");
+
+
+➡️ Agar file bada hai ya slow disk hai → tab tak server freeze ho jaayega.
+
+🔹 2. Asynchronous Code (Non-blocking code)
+
+Matlab ek kaam background mai bhej diya jaata hai (event loop + callback queue handle karta hai).
+Jab wo task complete hota hai → callback ya promise resolve hota hai → phir result milta hai.
+Isse ek request dusre ko block nahi karti → server multiple requests handle kar paata hai easily.
+
+👉 Example:
+const fs = require("fs");
+// Async file read
+fs.readFile("file.txt", "utf8", (err, data) => {
+  if (err) throw err;
+  console.log("File data:", data);
+});
+console.log("This runs immediately without waiting for file read.");
+
+
+➡️ File read hone ka wait nahi karega, aage ka code turant execute karega.
+
+🔹 3. Why is Async Important in Node.js?
+
+Node.js ek hi thread mai chal raha hota hai (single-threaded event loop).
+Agar sync (blocking) code likhoge → ek hi request sabko rok degi → server slow/laggy ho jaayega.
+Async code se Node.js ek sath 1000s of requests handle kar paata hai → fast, scalable server banta hai.
+Yeh hi reason hai ki Node.js ko "non-blocking I/O" bola jaata hai.
+
+🔹 4. Modern Async Handling
+
+Callbacks (old way, callback hell problem).
+
+Promises (better, .then() .catch()).
+
+async/await (best, clean & readable).
+
+👉 Example with async/await:
+
+const fs = require("fs").promises;
+
+async function readFile() {
+  try {
+    const data = await fs.readFile("file.txt", "utf8");
+    console.log("File data:", data);
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+readFile();
+console.log("This still runs immediately, async handles file later.");
+
+
+📌 TL;DR Notes
+
+Sync = blocking (slow, sab ruk jaata hai).
+
+Async = non-blocking (fast, scalable).
+
+Node.js ke liye async important hai kyunki single-threaded hai.
+
+Real-world mai hamesha async use karo (file read, DB queries, API calls, etc).
+
+
+📒 Express.js Notes
+1. Express Kya Hai?
+
+Express ek minimal & flexible Node.js framework hai.
+
+Ye server-side web apps & APIs banana easy banata hai.
+
+Node ke upar ek layer hai jo repetitive kaam simplify karti hai.
+
+2. Node.js Server vs Express Server
+🟢 Node.js (without Express)
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+  if (req.url === "/") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("Hello from Node");
+  }
+});
+server.listen(5000);
+
+
+👉 Problems:
+
+Har route ke liye if-else
+
+Request body parse manually
+
+Middleware concept nahi
+
+🟢 Express.js
+const express = require("express");
+const app = express();
+
+app.get("/", (req, res) => res.send("Hello from Express"));
+app.listen(5000);
+
+
+👉 Benefits:
+
+Simple routing
+
+Built-in middleware support
+
+Easy to scale
+
+3. Express Ke Features
+
+Routing system (app.get, app.post, etc.)
+
+Middleware (authentication, logging, error handling)
+
+Request parsing (JSON, URL-encoded)
+
+Static file serving
+
+Ecosystem packages (JWT, session, CORS, etc.)
+
+4. Express App Structure (Scalable Apps)
+project/
+│── index.js          // entry point
+│── routes/           // URL definitions
+│── controllers/      // business logic
+│── middleware/       // auth, validation
+│── models/           // database models
+
+5. Routes, Controllers & Middleware Example
+✅ index.js
+const express = require("express");
+const userRoutes = require("./routes/userRoutes");
+
+const app = express();
+app.use(express.json());
+
+app.use("/api/users", userRoutes);
+
+app.listen(5000, () => console.log("Server running on 5000"));
+
+✅ routes/userRoutes.js
+const express = require("express");
+const { getUsers } = require("../controllers/userController");
+const { protect } = require("../middleware/authMiddleware");
+
+const router = express.Router();
+
+router.get("/", getUsers);
+router.post("/", protect, (req, res) => res.send("User created"));
+
+module.exports = router;
+
+✅ controllers/userController.js
+const getUsers = (req, res) => {
+  res.json({ message: "All users fetched" });
+};
+module.exports = { getUsers };
+
+✅ middleware/authMiddleware.js
+const protect = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (token === "secret123") next();
+  else res.status(401).json({ message: "Unauthorized" });
+};
+module.exports = { protect };
+
+6. Middleware Types
+
+Application-level → app.use(logger)
+
+Router-level → specific routes pe apply hota hai
+
+Built-in → express.json(), express.static()
+
+Error-handling → (err, req, res, next)
+
+7. Why Express?
+
+Node se server bana sakte hai, lekin:
+
+Routing tough
+
+Request parsing manual
+
+Middleware support nahi
+
+Express ye sab problems solve karta hai.
+
+👉 One-liner for interview:
+"Express ek abstraction hai jo Node.js ko easy aur scalable banata hai by providing routing, middleware, and request handling features."
