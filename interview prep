@@ -480,3 +480,99 @@ Express ye sab problems solve karta hai.
 
 👉 One-liner for interview:
 "Express ek abstraction hai jo Node.js ko easy aur scalable banata hai by providing routing, middleware, and request handling features."
+
+
+
+
+
+
+
+
+
+MongoDB – populate() vs aggregate()
+1. populate()
+What is it?
+
+Feature of Mongoose (not MongoDB itself).
+
+Used to resolve references (ObjectId) between collections.
+
+Works like SQL JOIN.
+
+Example
+const User = mongoose.model("User", {
+  name: String,
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }]
+});
+
+const Post = mongoose.model("Post", {
+  title: String,
+  content: String
+});
+
+// Populate posts
+User.findById(userId).populate("posts").then(user => console.log(user));
+
+
+Without populate:
+
+{ "name": "Sagar", "posts": ["66a1b23c9d2...", "66a1b5d8a83..."] }
+
+
+With populate:
+
+{
+  "name": "Sagar",
+  "posts": [
+    { "title": "First Post", "content": "Hello" },
+    { "title": "Second Post", "content": "World" }
+  ]
+}
+
+Why was it introduced?
+
+MongoDB does not have JOINs.
+
+In real-world apps, relationships are common (User → Orders, Blog → Comments).
+
+Without populate: multiple queries needed.
+
+With populate: single clean query.
+
+Use Cases
+
+User → Posts
+
+Orders → Products
+
+Blog → Comments
+
+2. aggregate()
+What is it?
+
+Native MongoDB feature.
+
+Used for advanced data processing pipelines.
+
+Supports filtering, grouping, sorting, transformations, analytics.
+
+Example
+db.orders.aggregate([
+  { $group: { _id: "$userId", totalSpent: { $sum: "$amount" } } }
+]);
+
+
+Output:
+
+[
+  { "_id": 1, "totalSpent": 500 },
+  { "_id": 2, "totalSpent": 300 }
+]
+
+Use Cases
+
+Reports and analytics
+
+Complex filters and transformations
+
+Joining multiple collections ($lookup
