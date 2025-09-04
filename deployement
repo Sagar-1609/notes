@@ -99,3 +99,126 @@ Kubernetes → load detect kiya → 100 containers chala diye.
 CDN → product images aur CSS files nearest edge se serve hue.
 
 Confirmation email → ek serverless function (AWS Lambda) ne bhej diya.
+
+
+
+
+
+
+
+
+
+
+🚀 Deployment Notes (MERN/Next.js App on AWS EC2)
+🔹 Scenario 1: Normal Setup (Without Docker)
+
+Launch EC2 Instance
+
+Ubuntu choose kar, key pair (.pem) download.
+
+SSH into EC2
+
+ssh -i key.pem ubuntu@<ec2-ip>
+
+
+Install Dependencies
+
+sudo apt update
+sudo apt install -y nodejs npm git
+
+
+Clone Project
+
+git clone <repo-url>
+cd project-folder
+
+
+Install Node Modules
+
+npm install
+
+
+Set Env Vars
+
+Temporary:
+
+export MONGO_URI="mongodb+srv://..."
+export JWT_SECRET="xyz"
+
+
+Permanent → .bashrc ya .env
+
+Run App with PM2
+
+sudo npm install -g pm2
+pm2 start server.js --name myapp
+pm2 startup
+pm2 save
+
+
+✅ App running on EC2, PM2 ensures restart on reboot.
+
+🔹 Scenario 2: With Docker
+
+Install Docker
+
+sudo apt update
+sudo apt install -y docker.io
+sudo systemctl enable docker
+sudo systemctl start docker
+
+
+(Optional) Docker Compose
+
+sudo apt install docker-compose -y
+
+
+Clone Project
+
+git clone <repo-url>
+cd project-folder
+
+
+Create Dockerfile
+
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+ENV PORT=3000
+EXPOSE 3000
+CMD ["npm", "start"]
+
+
+.dockerignore
+
+node_modules
+npm-debug.log
+
+
+Build & Run Container
+
+sudo docker build -t myapp .
+sudo docker run -d -p 3000:3000 --name myapp-container myapp
+
+
+(For Mongo + App → Docker Compose)
+
+version: "3"
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mydb
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+sudo docker-compose up -d
+
+
+✅ App + Mongo run together inside containers.
