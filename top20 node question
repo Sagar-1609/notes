@@ -1,0 +1,199 @@
+Q1. Which of the following is not true about the exec method of child_process module?
+
+A. The exec() method returns a buffer with MAX_SIZE allocated if size parameter not specified.
+B. The exec() method runs a command in a shell and buffers the output.
+C. Like the exec(3) POSIX system call, child_process.exec() replaces the existing process.
+D. The exec() method waits for the process to end and tries to return the last buffered data.
+E. None of the options are correct.
+
+Correct Answer: C
+
+Q2. Despite the fact that JavaScript is single-threaded, what allows you to perform non-blocking I/O operations?
+
+A. Event Loop
+B. Process
+C. Timers
+D. REPL
+E. Poll
+
+Correct Answer: A
+
+Q3. Which of the following is not the correct statement about the cluster module?
+
+A. Workers in clusters are all separate processes, can be killed or respawned.
+B. Child processes in the cluster can communicate with the parent via IPC.
+C. A cluster an instance represents smallest logical disk space allocation.
+D. Cluster module allows easy creation of child processes that share server ports.
+E. Clusters can distribute workloads among Node.js processes.
+
+Correct Answer: C
+
+Q4. Output of this EventEmitter code?
+let EventEmitter = require("events");
+let event = new EventEmitter();
+
+event.on("event1", function () {
+  console.log("Event1 fired!");
+  setTimeout(function () {
+    event.emit("event2");
+  }, 1000);
+});
+
+event.on("event2", function () {
+  console.log("Event2 fired!");
+  setTimeout(function () {
+    event.emit("event1");
+  },500);
+});
+
+event.on("event3", function () {
+  console.log("Event3 fired!");
+  process.nextTick(function () {
+    event.emit("event1");
+  });
+});
+
+
+A. Prints Event1, Event2, Event3 once
+B. Prints Event1, Event2, Event3 infinitely
+C. Prints Event3 once then Event1, Event2 infinitely
+D. Compile-time error
+E. Prints Event3, Event2 once then Event1 infinitely
+
+Correct Answer: None (no emit called initially, so prints nothing)
+
+Q5. Which is not true about libuv in NodeJS?
+
+A. libuv is a C library that abstracts non-blocking I/O.
+B. Provides FS, DNS, network, child process, pipes, etc.
+C. None of the options are correct.
+D. uv_default_loop() gives default loop.
+E. Enforces async event-driven style.
+
+Correct Answer: C
+
+Q6. Reading a 400MB file with minimum memory?
+
+A. All options are correct
+B. fs.readFileSync
+C. fs.readFile async
+D. None are correct
+E. fs.createReadStream('account.csv').pipe(res);
+
+Correct Answer: E
+
+Q7. What will happen here?
+var fs = require("fs").promises;
+var path = require("path");
+
+const directory = "test";
+
+const deleteFiles = async () => {
+  for await (const file of fs.readdir(directory)) {
+    await fs.unlink(path.join(directory, file));
+  }
+};
+deleteFiles();
+
+
+A. Deletes files
+B. Deletes recursively
+C. Deletes dirs too
+D. Runtime error
+E. None
+
+Correct Answer: D (fs.readdir returns Promise, not async iterable)
+
+Q8. Server requestLogs memory leak example → millions of requests
+
+Correct Answer: C (Out Of Memory Exception)
+
+Q9. Cookie code → replace ?? with correct header
+
+Correct Answer: E (Set-Cookie)
+
+Q10. Async forEach reading files
+fileNames.forEach(async (fileName) => {
+  let contents = await fs.readFile(fileName, "utf8");
+  console.log(contents);
+});
+
+
+A. Will not print in sequence (needs for..of)
+B. Compile error
+C. Prints in sequence (Promise.all faster)
+D. Strict order
+E. Prints nothing
+
+Correct Answer: A
+
+Q11. Logger EventEmitter memory leak (11 listeners)
+
+Correct Answer: C (move Logger.on out of loop)
+
+Q12. Circular dependency a.js and b.js
+
+Correct Answer: Yes → fix by moving require("./b") inside constructor in a.js + require util
+
+Q13. Which of the following is true in JavaScript?
+
+Correct Answer: C (Native objects defined by ECMAScript)
+
+Q14. Pure vs Impure functions
+
+Correct Answer: B
+
+Q15. Difference between call and bind
+
+Correct Answer: B (call immediate, bind returns function)
+
+Q16. Object.freeze
+Object.freeze(obj);
+obj.balance = 200;
+
+
+Correct Answer: D ("use strict" needed to throw error)
+
+Q17. Remove extra key isSelected before API call
+const { isSelected, ...newObj } = bankAccount;
+
+
+Correct Answer: D
+
+Q18. Log all args for all functions
+
+Correct Answer: C (higher-order function wrapper)
+
+Q19. BankAccount class with static issue
+
+Correct Answer: B (Runtime exception, remove static)
+
+Q20. Bank object deductCharges / addQuaterlyInterest → NaN
+
+Correct Answer: A (fix arrow to normal function)
+
+Q21. Delete customer by ID
+var index = customers.findIndex(c => c.id === value);
+if (index > -1) customers.splice(index, 1);
+
+
+Correct Answer: E
+
+Q22. Generator yields customer ids
+
+Correct Answer: E (prints 3 ids sequentially)
+
+Q23. Private keyword vs JS private fields
+
+Correct Answer: B
+
+Q24. Constants in TypeScript
+
+Correct Answer: A (public readonly userId = 1; instance var)
+
+Q25. Function overloading in TS → transpiled functions
+
+Correct Answer: D (1 function created, overloads erased)
+
+⚡ That’s the entire set of Q&A with code + options + answers.
+Just paste this into Word/Google Docs → File → Download →
