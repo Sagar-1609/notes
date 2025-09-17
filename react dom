@@ -1,0 +1,18 @@
+react → only gives you the ability to create components (useState, useEffect, JSX, etc.).
+
+react-dom → is the bridge that actually puts those components into the real browser DOM so users can see them.
+
+👉 Without react-dom, your React components are just sitting in memory, not visible on screen.
+
+
+. React aur ReactDOM ka relation
+
+React (library) → Yeh sirf components banane ka dimaag hai.
+
+Jaise useState, useEffect, JSX, hooks, etc.
+
+Ye bas virtual DOM tak kaam karta hai (yaani browser pe actual dikhane tak nahi jata).
+
+ReactDOM (library) → Yeh bridge hai jo React ke virtual DOM ko real browser DOM pe chipkataa hai.
+
+Matlab jo tumne <App /> banaya, woh ReactDOM ke bina screen pe kabhi dikh hi nahi paayega.
