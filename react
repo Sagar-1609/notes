@@ -1,0 +1,42 @@
+1. Virtual DOM
+
+Browser me ek Real DOM hota hai (jo tum document.getElementById se access karte ho).
+
+React ek Virtual DOM banata hai → basically ek JavaScript ka object copy of the real DOM.
+
+Jab tum state update karte ho:
+
+React pehle Virtual DOM update karta hai.
+
+Phir diffing algorithm se check karta hai ki real DOM me kya change karna hai.
+
+Sirf wahi part update hota hai (na ki pura page reload).
+
+👉 Fayda = fast performance.
+
+2nd sub topic 
+React vs ReactDOM
+
+React: Components banata hai, state/props manage karta hai (brains 🧠).
+
+ReactDOM: Un components ko actual real DOM me dikhata hai (hands 👷).
+
+
+
+
+JSX (JavaScript XML)
+
+JavaScript + HTML mix ka syntax.
+
+Example:
+
+const element = <h1>Hello, world!</h1>;
+
+
+Browser JSX samajhta nahi, isliye Babel usko normal JS me convert karta hai:
+
+const element = React.createElement("h1", null, "Hello, world!");
+
+
+👉 Interviewer aksar poochta hai: “JSX bina React ke use kar sakte ho?”
+Answer: Haan, par inconvenient hoga kyunki React.createElement likhna padega har jagah. JSX is just syntactic sugar.
