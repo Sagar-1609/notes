@@ -185,5 +185,66 @@ function Counter() {
 }
 
 
+🔴 Problem: normal variable se kyu nahi hota?
+
+React me UI declarative hoti hai. Matlab:
+
+Tu bolta hai: "agar state count=0 hai toh yeh UI render karo."
+
+Agar variable badal gaya, React ko kaise pata chale UI dobara render karna hai?
+
+👉 Agar tu simple let count = 0; rakhega aur usko badlega count++, toh React UI update hi nahi karega, kyunki React ko trigger hi nahi mila.
+React bas apni internal "state tracker" ke through UI ko re-render karta hai.
+
+🟢 Solution: Hooks (jaise useState)
+
+useState ek special function hai jo React ke andar ek memory slot me value store karta hai, aur saath me ek setter deta hai jo React ko batata hai:
+
+"Bhai, value change ho gayi hai, ab component dobara run kar."
+
+const [count, setCount] = useState(0);
+
+
+Pehli call → React bolta: “ok slot #1 me 0 store kar liya.”
+
+Jab setCount(1) call hota hai → React bolta:
+
+slot #1 ki value update karo.
+
+component ko re-render karo.
+
+nayi value slot se dobara do.
+
+⚙️ Under the hood (thoda simplified)
+
+React ek linked list/array of hooks rakhta hai har component ke liye.
+
+Jab tu component call karta hai, React sequence se har hook ko padhta hai:
+useState (slot 1), useEffect (slot 2), useContext (slot 3)...
+
+Isliye hooks hamesha top-level pe call karna padta hai, loops/ifs ke andar nahi, warna sequence bigad jayega.
+
+
+
+1️⃣ useState
+
+Kya karta hai: component ke andar data ko “remember” karne ke liye.
+
+Problem solve: normal variable har render pe reset ho jaata hai, useState value ko render ke across preserve karta hai.
+
+Kaise kaam karta hai (under the hood):
+
+React ek internal list maintain karta hai states ki.
+
+Har render pe woh us list se tumhari value fetch karta hai, aur setState call karne par nayi render trigger karta hai.
+
+👉 Example:
+
+const [count, setCount] = useState(0);
+
+<button onClick={() => setCount(count + 1)}>
+  Count: {count}
+</button>
+
 
 
