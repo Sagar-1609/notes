@@ -134,3 +134,56 @@ React.createElement(...) → ye JS hai, browser samajh sakta hai.
 
 
 
+
+
+
+
+
+
+
+  state vs props
+Chalo bhai 🚀 ab State vs Props clear karte hain — yeh interviewer ka favourite hota hai.
+
+🔹 1. Props
+
+Props = Properties
+
+Parent → Child data bhejne ka tareeka.
+
+Read-only (child sirf use kar sakta hai, change nahi kar sakta).
+
+Example:
+
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+<Welcome name="Sagar" />
+
+
+👉 name="Sagar" is a prop.
+
+🔹 2. State
+
+Component ke andar ka data jo change ho sakta hai.
+
+useState hook ke through manage karte hain.
+
+Jab state change hota hai → component re-render hota hai.
+
+Example:
+
+function Counter() {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <div>
+      <p>{count}</p>
+      <button onClick={() => setCount(count + 1)}>+</button>
+    </div>
+  );
+}
+
+
+
+
