@@ -1,0 +1,118 @@
+ki MongoDB ke delete methods/operators ko kab aur kis situation mein use karna chahiye 👇
+
+🧹 1️⃣ $unset → Jab Field Remove Karni Ho, Poora Document Nahi
+
+🎯 Use when you just want to remove one or more specific keys (fields) from a document.
+
+Example Scenario:
+
+User signup ke time tempPassword field tha, login hone ke baad uski zarurat nahi.
+
+API ne kuch extra metadata add kar diya jo ab chahiye nahi.
+
+Profile update karte waqt koi field hata di gayi (e.g. middleName).
+
+await User.updateOne({ _id: id }, { $unset: { tempPassword: "" } });
+
+
+📌 Why: Safe, partial cleanup — data loss nahi hota, sirf unwanted field hatta hai.
+
+🗑️ 2️⃣ deleteOne() → Jab Sirf Ek Document Delete Karna Ho
+
+🎯 Use when you want to delete a single matching record.
+
+Example Scenario:
+
+Admin ne ek specific user ko ban kar diya.
+
+Ek specific order cancel karni ho.
+
+Ek unique record (e.g. _id, email) delete karna ho.
+
+await User.deleteOne({ email: "user@example.com" });
+
+
+📌 Why: Fast, targeted, and doesn’t affect others.
+
+💥 3️⃣ deleteMany() → Jab Multiple Records Ek Condition Pe Delete Karne Ho
+
+🎯 Use when you want to delete all matching documents.
+
+Example Scenario:
+
+Purane (older than 1 year) logs clean karne ho.
+
+status: "inactive" wale users ko bulk delete karna ho.
+
+Test environment ka dummy data hatana ho.
+
+await Logs.deleteMany({ createdAt: { $lt: oneYearAgo } });
+
+
+📌 Why: Batch cleanup ya data retention ke liye best.
+
+🔁 4️⃣ findOneAndDelete() → Jab Delete Karna Hai Aur Deleted Data Bhi Chahiye
+
+🎯 Use when you want to delete and immediately get the deleted document back.
+
+Example Scenario:
+
+Admin ne koi post delete ki, aur aapko uska deleted content log karna hai.
+
+User ne koi record remove kiya aur aapko frontend pe wo “undo” show karna hai.
+
+const deleted = await Post.findOneAndDelete({ _id: postId });
+console.log("Deleted:", deleted);
+
+
+📌 Why: Delete + confirmation ya undo functionality ke liye perfect.
+
+🧨 5️⃣ $pull → Jab Array Ke Andar Se Specific Element Hataana Ho
+
+🎯 Use when your document contains arrays and you want to remove one matching element.
+
+Example Scenario:
+
+User ke wishlist se ek product hatana.
+
+Group chat se ek member remove karna.
+
+Tags array se ek tag delete karna.
+
+await User.updateOne({ _id: id }, { $pull: { wishlist: productId } });
+
+
+📌 Why: Array cleanup ke liye best — poora array delete nahi hota.
+
+⚙️ 6️⃣ $pop → Jab Array Ka Pehla Ya Aakhri Element Hataana Ho
+
+🎯 Use when array behaves like a queue or stack (FIFO/LIFO).
+
+Example Scenario:
+
+Recent notifications mein sirf last 10 chahiye → purane automatically remove karne.
+
+Chat messages limit maintain karni ho (purane pop karna).
+
+await Chat.updateOne({ _id }, { $pop: { messages: -1 } }); // removes first message
+
+
+📌 Why: Auto-cleanup / fixed-size list maintain karne ke liye.
+
+🧨 7️⃣ $pullAll → Jab Array Se Multiple Elements Ek Saath Remove Karne Ho
+
+🎯 Use when you know multiple specific values you want to remove from an array.
+
+Example Scenario:
+
+Bulk product IDs ko wishlist se hataana.
+
+Multiple permissions revoke karna.
+
+await User.updateOne(
+  { _id },
+  { $pullAll: { wishlist: [id1, id2, id3] } }
+);
+
+
+📌 Why: Efficient bulk removal for array fields.
