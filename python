@@ -1,1 +1,29 @@
 
+a = 5
+b = 3
+print(a + b)
+Cool. But here’s the catch — your CPU doesn’t understand English, Hindi, or even “print.”
+It only speaks binary (0s and 1s) — like:
+
+Copy code
+101010100110001010101010
+So your nice readable code is useless to the computer — it needs a translator.
+
+⚙️ STEP 2 — Python Interpreter = The Translator
+When you hit “Run,” a program called the Python Interpreter starts working.
+Think of it like a translator who reads your line:
+
+css
+Copy code
+print(a + b)
+and tells the computer, “Yo, this means add two numbers and print it.”
+
+There are two kinds of translators in programming:
+
+Compilers (like in C++) — translate the whole book (program) before running.
+
+Interpreters (like Python) — translate one sentence at a time while running.
+
+So Python reads → translates → executes → next line → repeat.
+
+That’s why Python runs a bit slower than compiled languages — it’s thinking as it goes.
