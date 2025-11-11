@@ -1,4 +1,25 @@
 
+
+
+
+
+we will start from writing a fucntion which is 
+filename : first_python.py
+def newfunction(n):
+      print(n)
+
+newfunction(4)
+
+now this will print the fucntion
+
+************
+
+now we can create a another file filename:python12.py and import newfunction this function
+syntax from [filename] import [function name]
+
+from first_python import newfunction
+
+and when we run  it will create a file caches 
 a = 5
 b = 3
 print(a + b)
