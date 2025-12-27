@@ -1,0 +1,169 @@
+db concepts
+
+So what is POOLER SESSION MODE?
+The REAL problem (no tech words)
+
+Think of a restaurant 🍽️
+
+Restaurant has 100 chairs
+
+That’s it. No more.
+
+Now:
+
+500 people come
+
+If everyone sits → chairs break → chaos
+
+👉 Database = restaurant
+👉 DB connections = chairs
+
+PostgreSQL says:
+
+“I can only handle ~100 people at a time.”
+
+What happens without a pooler? 💥
+
+Your app is dumb and greedy:
+
+Every user comes
+
+App says: “Here, take a new chair 🪑”
+
+101st user comes → CRASH
+
+Result:
+
+App down
+
+Errors
+
+Panic
+
+“Why production broken??”
+
+Enter: Connection Pooler (the bouncer 😎)
+
+Now imagine a bouncer at the door.
+
+He says:
+
+“Only 100 people inside”
+
+“When someone leaves, next one comes”
+
+That bouncer = connection pooler
+
+What the pooler does (simple)
+
+Keeps only 100 DB connections open
+
+Reuses them
+
+Stops your app from opening unlimited ones
+
+So instead of:
+
+500 users = 500 DB connections ❌
+
+
+You get:
+
+500 users = 100 DB connections ✅
+
+
+DB stays alive. Everyone happy.
+
+Now where does SESSION MODE fit in?
+
+Session mode decides HOW people sit.
+
+SESSION MODE = “One person, one chair, don’t move”
+
+Rule:
+
+User comes in
+
+Gets a chair
+
+Sits there until they leave
+
+Nobody else can use that chair
+
+Example:
+
+User A → Chair #1 → keeps it
+User B → Chair #2 → keeps it
+User C → waits outside 😬
+
+What does this help with? (REAL help)
+
+Because the user:
+
+stays on same chair
+
+nothing changes under them
+
+their stuff stays safe
+
+Meaning:
+
+DB remembers them
+
+No mix-ups
+
+No half work
+
+Good when:
+
+Doing serious work
+
+Multiple steps
+
+Money, admin, reports
+
+Why not always use session mode?
+
+Because it’s slow & greedy.
+
+If:
+
+100 users sit
+
+101st user comes
+
+👉 He waits.
+Even if chairs are idle.
+
+That’s why:
+
+App feels slow
+
+Users complain
+
+DB not dead, but app is choking
+
+One-line super simple summary
+
+Connection pooler stops the database from dying.
+Session mode decides that one user keeps one connection till they’re done.
+
+Final brutal truth
+
+Session mode:
+
+✅ Safe
+
+❌ Not scalable
+
+It solves:
+
+correctness
+
+stability
+
+It sacrifices:
+
+speed
+
+concurrency
