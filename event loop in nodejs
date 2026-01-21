@@ -1,0 +1,97 @@
+🧠 How Node decides “what runs next”
+
+Imagine Node has 4 priority buckets.
+After your normal code finishes, Node checks these buckets in order.
+
+1️⃣ process.nextTick() — “DO THIS RIGHT NOW”
+Highest priority. Dangerous if abused.
+What it is:
+A special Node-only queue
+
+Runs before anything else
+
+Even before Promises
+
+Simple analogy:
+
+You’re in a meeting, and your boss whispers:
+
+“Stop everything. Handle this NOW.”
+
+That’s process.nextTick.
+
+Key points:
+
+Runs immediately after current code
+
+Can block everything if overused
+
+Timers, Promises, I/O → all get ignored until this finishes
+
+Why it’s risky:
+
+If you keep adding nextTick inside nextTick, Node never moves on.
+
+🔥 Server freeze potential.
+
+
+
+
+
+
+
+2️⃣ Promise.then() — “Run this right after”
+High priority, but safer.
+What it is:
+Microtask queue
+Used by Promises and async/await
+Simple analogy:
+You tell yourself:
+“As soon as I finish this task, I’ll do this small thing.”
+That’s a microtask.
+
+Key points:
+
+Runs after nextTick
+
+Runs before timers
+
+Used everywhere in modern JS
+
+Important:
+
+Promises can delay timers,
+but they can’t completely kill the event loop like nextTick.
+
+
+
+
+
+
+
+
+
+3️⃣ setTimeout() — “Do this later (at least X ms)”
+Not instant. Ever.
+What it is:
+Goes into Timers phase
+0ms means “minimum delay”, not instant
+
+Simple analogy:
+
+You set an alarm:
+“Do this after some time has passed.”
+
+Even 0ms means:
+
+“After Node checks other stuff.”
+
+Key points:
+
+Timing is not guaranteed
+
+Depends on system load
+
+Can be delayed if Node is busy
+
+That’s why setTimeout(0) ≠ immediate.
