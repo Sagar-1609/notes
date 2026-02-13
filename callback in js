@@ -1,0 +1,76 @@
+A callback is a function you give to another function, so it can call it later.
+That’s it.
+
+Think of it like this (real life)
+You order food.
+You tell the delivery guy:
+“When you reach, call me.”
+That “call me” is the callback.
+
+You don’t call it right now.
+You’re saying:
+
+Do your job first
+
+Then run this function later
+
+Simple JavaScript Example:
+
+function greet(name, callback) {
+  console.log("Hello " + name);
+  callback();
+}
+
+
+function sayBye() {
+  console.log("Bye!");
+}
+
+greet("Sagar", sayBye);
+
+Output:
+Hello Sagar
+Bye!
+
+
+Why do callbacks exist?
+
+Because JavaScript does a lot of stuff that takes time:
+
+fetching data from internet
+
+reading files
+
+waiting for user click
+
+timers
+
+So you can’t always run code instantly.
+
+Example: setTimeout
+setTimeout(() => {
+  console.log("This runs after 2 seconds");
+}, 2000);
+
+
+That arrow function is a callback.
+
+You’re telling JS:
+
+“Wait 2 seconds, then call this.”
+
+Example: Button click
+button.addEventListener("click", () => {
+  console.log("Button clicked!");
+});
+
+
+That function runs only when the user clicks.
+
+Callback again.
+Brutally Honest Summary
+Callbacks are not special.
+A callback is just:
+a function passed as an argument
+to be executed later
+usually after something finishes
