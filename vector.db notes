@@ -33,4 +33,87 @@ Example:
 → [0.12, -0.88, 0.45, ...]
 
 
-  
+
+Step 4: Store in Vector DB
+Now store:
+{
+  vector: [0.12, -0.88, 0.45, ...],
+  metadata: {
+    text: "Our refund policy lasts 7 days",
+    source: "refund_doc.pdf"
+  }
+}
+}
+
+👉 This is key:
+Vector = for search
+Metadata = for returning actual content
+
+
+
+Step 5: User Input
+User: "What is your refund policy?"
+
+
+Step 6: Convert Query → Vector
+Same embedding model:
+Query → Embedding → Vector
+Example:
+"What is your refund policy?"
+→ [0.10, -0.85, 0.40, ...]
+
+
+
+Step 7: Similarity Search (CORE of vector DB)
+Now vector DB does:
+👉 “Find closest vectors to this query vector”
+Using math like:
+cosine similarity
+dot product
+
+
+Step 8: Retrieve Top Matches
+Example result:
+1. "Our refund policy lasts 7 days"
+2. "No refund after 7 days"
+👉 These are the most relevant chunks
+
+
+Step 9: Send to LLM (RAG)
+Now you combine:
+User Query + Retrieved Chunks
+Example:
+Context:
+"Our refund policy lasts 7 days"
+
+Question:
+"What is your refund policy?"
+
+
+
+Step 10: LLM Generates Answer
+LLM outputs:
+"Our refund policy allows refunds within 7 days of purchase."
+🔁 FULL PIPELINE (ONE VIEW — SAVE THIS)
+[DATA INGESTION]
+Raw Data
+→ Chunking
+→ Embedding Model
+→ Vectors
+→ Store in Vector DB (with metadata)
+
+
+[QUERY PHASE]
+
+User Query
+→ Embedding Model
+→ Query Vector
+→ Similarity Search in Vector DB
+→ Retrieve Top K Results
+
+
+[RESPONSE PHASE]
+
+Retrieved Context
+→ Send to LLM
+→ Final Answer
