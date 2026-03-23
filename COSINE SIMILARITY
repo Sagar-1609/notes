@@ -1,0 +1,26 @@
+🔥 1. The REAL problem we’re solving
+You have:
+Sentence A: "buy cheap phone"
+Sentence B: "affordable smartphone"
+After embedding:
+A → [0.2, 0.8, -0.1, ...]
+B → [0.18, 0.75, -0.12, ...]
+👉 Now the problem:
+How do we measure “how similar” these two vectors are?
+
+ So what does cosine similarity do?
+👉 It ignores length
+👉 It only checks angle between vectors
+📐 Formula (now it’ll make sense)
+cos⁡(𝜃) = 𝐴⋅B
+        ∥𝐴∥∥𝐵∥
+
+
+🧠 5. Break the formula (no intimidation)
+🟢 Step 1: Dot Product (A · B)
+A = [a1, a2]
+B = [b1, b2]
+
+Dot = (a1*b1 + a2*b2)
+
+	​
