@@ -1,0 +1,36 @@
+🧠 VECTOR DATABASE — COMPLETE WORKFLOW (INPUT → OUTPUT)
+🔥 0. Big Picture (don’t skip this)
+
+System has 3 core parts:
+
+Embedding Model → converts text to vector
+Vector DB → stores & searches vectors
+LLM (optional) → generates final answer
+
+  ⚙️ 1. DATA INGESTION (Storing your data)
+Step 1: Raw Data Input
+You start with:
+PDFs / Docs / Text / Website / Database
+Example:   "Our refund policy lasts 7 days..."
+
+
+Step 2: Chunking (VERY IMPORTANT)
+👉 You don’t store full documents.
+You split into smaller pieces:
+Chunk 1: "Our refund policy lasts 7 days"
+Chunk 2: "No refund after 7 days."
+Why?
+Embeddings work better on small chunks
+Improves search accuracy
+👉 If you skip this → garbage results
+
+
+Step 3: Convert Text → Embeddings
+Each chunk goes into the embedding model
+Chunk → Embedding Model → Vector
+Example:
+"Our refund policy lasts 7 days."
+→ [0.12, -0.88, 0.45, ...]
+
+
+  
