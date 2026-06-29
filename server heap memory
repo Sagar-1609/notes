@@ -1,0 +1,563 @@
+# 🧠 Node.js Heap Memory Notes (Simple Version)
+
+---
+
+# What is Heap Memory?
+
+Think of your Node.js application as a **restaurant**.
+
+* Restaurant = Your Node.js App
+* Kitchen = Heap Memory
+* Chef = Node.js
+* Customers = API Requests
+
+Whenever a customer places an order, the chef uses the kitchen to prepare food.
+
+Similarly, whenever your application processes a request, Node.js uses **Heap Memory** to store:
+
+* Objects
+* Arrays
+* Strings
+* Functions
+
+Example:
+
+```js
+const user = {
+    name: "Zoro",
+    age: 21
+};
+
+const users = [];
+```
+
+Both `user` and `users` are stored inside the Heap.
+
+---
+
+# What is Heap Limit?
+
+Every restaurant has a kitchen with limited space.
+
+Example:
+
+Kitchen Capacity
+
+```
+100 Plates
+```
+
+The chef cannot keep adding plates forever.
+
+Similarly, Node.js also has a limit.
+
+Example:
+
+```
+Heap Limit = 4 GB
+```
+
+This means:
+
+Node.js can use memory until it reaches 4 GB.
+
+If it needs more, it crashes.
+
+---
+
+# What is --max-old-space-size?
+
+Suppose your restaurant owner says:
+
+> "From today, you can use a bigger kitchen."
+
+Earlier:
+
+```
+Kitchen Capacity
+
+4 GB
+```
+
+Now:
+
+```
+Kitchen Capacity
+
+8 GB
+```
+
+Command:
+
+```bash
+NODE_OPTIONS="--max-old-space-size=8192"
+```
+
+This **does not fill the kitchen with 8 GB of objects.**
+
+It simply increases the maximum space available.
+
+---
+
+# Does Node.js reserve 8 GB immediately?
+
+No.
+
+Think about a parking lot.
+
+Parking Lot Capacity
+
+```
+8000 Cars
+```
+
+Morning:
+
+```
+🚗 🚗
+```
+
+Afternoon:
+
+```
+🚗🚗🚗🚗🚗🚗🚗
+```
+
+Night:
+
+```
+🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗
+```
+
+Just because the parking lot can hold **8000 cars** doesn't mean it starts full.
+
+Exactly the same with Node.js.
+
+If your application only needs:
+
+```
+250 MB
+```
+
+It only uses:
+
+```
+250 MB
+```
+
+Even if the limit is 8 GB.
+
+---
+
+# Heap Limit vs Current Memory
+
+These are completely different things.
+
+Example:
+
+```
+Heap Limit
+
+8 GB
+```
+
+Current Usage
+
+```
+350 MB
+```
+
+Node can grow **up to** 8 GB if required.
+
+It does **not** start at 8 GB.
+
+---
+
+# Why does "Heap Out Of Memory" happen?
+
+Imagine your kitchen can hold:
+
+```
+100 Plates
+```
+
+Orders keep coming.
+
+Eventually:
+
+```
+100 Plates
+```
+
+Kitchen becomes full.
+
+A new customer arrives.
+
+The chef has nowhere to keep the new plate.
+
+Restaurant stops working.
+
+Exactly the same happens inside Node.js.
+
+---
+
+# Understanding the Error
+
+```
+FATAL ERROR
+
+JavaScript Heap Out Of Memory
+```
+
+means:
+
+1. Heap became full.
+2. Node tried cleaning memory.
+3. Still not enough space.
+4. Node crashed.
+
+---
+
+# What is Garbage Collector?
+
+Imagine waiters collect empty plates.
+
+Customer finishes eating.
+
+Waiter removes plates.
+
+Kitchen becomes free again.
+
+Node.js does the same thing.
+
+It automatically removes objects that are no longer used.
+
+Example:
+
+```js
+let user = {
+    name: "Zoro"
+};
+
+user = null;
+```
+
+Nobody is using that object anymore.
+
+Garbage Collector removes it later.
+
+---
+
+# Why did our Database Transfer crash?
+
+Our code:
+
+```js
+const data = await srcDb
+    .collection(collectionName)
+    .find({})
+    .toArray();
+```
+
+The dangerous part is:
+
+```js
+.toArray()
+```
+
+---
+
+# What does toArray() do?
+
+Imagine a warehouse.
+
+Inside the warehouse:
+
+```
+1 Million Boxes
+```
+
+Bad approach:
+
+You tell workers:
+
+> Bring ALL boxes at once.
+
+Warehouse
+
+```
+📦📦📦📦📦📦📦📦📦📦
+```
+
+↓
+
+Truck
+
+```
+📦📦📦📦📦📦📦📦📦📦
+```
+
+Truck becomes overloaded.
+
+Exactly what `toArray()` does.
+
+MongoDB sends **every document**.
+
+Node creates one huge JavaScript array.
+
+Everything stays inside RAM.
+
+---
+
+# Then insertMany() runs
+
+Now Node still has:
+
+```
+Huge Array
+```
+
+At the same time it prepares data for insertion.
+
+So memory usage becomes even larger.
+
+---
+
+# Why increasing Heap to 8 GB works
+
+Earlier:
+
+```
+Kitchen Capacity
+
+4 GB
+```
+
+Migration needed:
+
+```
+5.5 GB
+```
+
+Crash.
+
+After increasing:
+
+```
+Kitchen Capacity
+
+8 GB
+```
+
+Migration needs:
+
+```
+5.5 GB
+```
+
+Now there is enough room.
+
+No crash.
+
+---
+
+# Is increasing Heap to 8 GB a permanent solution?
+
+No.
+
+Imagine tomorrow your database becomes twice as large.
+
+Now migration needs:
+
+```
+12 GB
+```
+
+Even with an 8 GB heap:
+
+Crash.
+
+The real problem still exists.
+
+---
+
+# Permanent Solution
+
+Instead of moving all boxes at once,
+
+move them in small batches.
+
+Warehouse
+
+```
+1000 Boxes
+```
+
+↓
+
+Truck
+
+```
+100 Boxes
+```
+
+↓
+
+Deliver
+
+↓
+
+Come back
+
+↓
+
+Load next 100
+
+↓
+
+Deliver
+
+Memory stays almost constant.
+
+This is called:
+
+* Batch Processing
+* Cursor
+
+---
+
+# Why Batch Processing is Better
+
+Bad
+
+```
+1,000,000 Documents
+
+↓
+
+RAM
+
+↓
+
+Crash
+```
+
+Good
+
+```
+1000 Documents
+
+↓
+
+Insert
+
+↓
+
+Free Memory
+
+↓
+
+Next 1000
+
+↓
+
+Insert
+```
+
+Memory stays low no matter how large the database becomes.
+
+---
+
+# Disadvantages of increasing Heap
+
+## 1. More RAM can be used
+
+Node is allowed to grow bigger.
+
+It still won't use that memory unless needed.
+
+---
+
+## 2. Garbage Collection becomes slower
+
+Cleaning a small room
+
+```
+100 Items
+```
+
+takes a few minutes.
+
+Cleaning a huge warehouse
+
+```
+1 Million Items
+```
+
+takes much longer.
+
+Same for Garbage Collection.
+
+Larger Heap = Longer Cleanup.
+
+---
+
+## 3. Can hide Memory Leaks
+
+Suppose your app leaks memory.
+
+With 4 GB:
+
+```
+Crash after 30 minutes.
+```
+
+With 8 GB:
+
+```
+Crash after 2 hours.
+```
+
+The bug still exists.
+
+You only delayed it.
+
+---
+
+# Our VPS
+
+Our Server:
+
+```
+RAM
+
+16 GB
+
+CPU
+
+4 Cores
+```
+
+Because our server has 16 GB RAM,
+
+using an 8 GB heap for a **one-time migration** is completely reasonable.
+
+---
+
+# Final Summary
+
+✅ Heap stores JavaScript objects.
+
+✅ Heap Limit is only the maximum allowed memory.
+
+✅ Node does NOT reserve 8 GB on startup.
+
+✅ `toArray()` loads the entire collection into memory.
+
+✅ Large collections can easily fill the heap.
+
+✅ Increasing heap size is a temporary fix.
+
+✅ Batch processing or cursors are the permanent solution.
+
+✅ An 8 GB heap is safe on our 16 GB VPS for migration tasks.
