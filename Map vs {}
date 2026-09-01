@@ -1,0 +1,136 @@
+# JavaScript Map - Simple Notes
+
+## What is `Map`?
+
+`Map` is a JavaScript data structure used to store data in **key → value** pairs.
+
+```js
+const byUser = new Map();
+
+This creates an empty Map.
+
+Output:
+
+Map(0) {}
+
+Think of it like:
+
+Key       → Value
+user123   → John
+user456   → Alice
+Adding Data
+
+Use .set():
+
+const byUser = new Map();
+
+byUser.set("user123", "John");
+byUser.set("user456", "Alice");
+
+Now the Map contains:
+
+Map(2) {
+  "user123" => "John",
+  "user456" => "Alice"
+}
+Getting Data
+
+Use .get():
+
+byUser.get("user123");
+
+Output:
+
+John
+Checking if a Key Exists
+
+Use .has():
+
+byUser.has("user123");
+
+Output:
+
+true
+
+If the key doesn't exist:
+
+byUser.has("user999");
+
+Output:
+
+false
+Deleting Data
+
+Use .delete():
+
+byUser.delete("user123");
+
+This removes:
+
+user123 → John
+Getting the Number of Items
+
+Use .size:
+
+byUser.size;
+
+Example:
+
+2
+Map vs Object {}
+
+We can also store key-value data using a normal object:
+
+const byUser = {};
+
+byUser["user123"] = "John";
+byUser["user456"] = "Alice";
+
+Output:
+
+{
+  user123: "John",
+  user456: "Alice"
+}
+
+So Map is NOT mandatory. An object can also be used.
+
+Why Use Map Instead of {}?
+
+Map is specifically designed for storing and managing key → value data.
+
+Operation	Map	Object
+Add	map.set(key, value)	obj[key] = value
+Get	map.get(key)	obj[key]
+Check	map.has(key)	key in obj
+Delete	map.delete(key)	delete obj[key]
+Count	map.size	Object.keys(obj).length
+Simple Example
+const byUser = new Map();
+
+byUser.set("user101", { name: "John", age: 25 });
+byUser.set("user102", { name: "Alice", age: 30 });
+
+console.log(byUser.get("user101"));
+
+Output:
+
+{
+  name: "John",
+  age: 25
+}
+
+Think of it as:
+
+byUser
+   ↓
+┌──────────────┐
+│ user101 → John  │
+│ user102 → Alice │
+└──────────────┘
+Easy Rule to Remember
+{}     → General-purpose object
+Map    → Key → Value storage
+In one sentence:
+
+Map is a JavaScript structure that lets you easily store, find, check, and delete values using keys.
