@@ -1,0 +1,30 @@
+ssh tunnel or dynamic port forwarding
+
+
+
+
+It is called an SSH tunnel. This specific type is called dynamic port forwarding, which creates a SOCKS proxy.
+You can search for these words: “SSH tunnel”, “SSH dynamic port forwarding”, or “SOCKS proxy over SSH”.
+The simple idea
+Think of your AWS server as a trusted friend who already has a pass to enter the Shopify building.
+Without the tunnel: you go to Shopify yourself. The guard checks your address, does not find it on the list, and says “403, not allowed.”
+With the tunnel: you give your message to your friend, and your friend walks in and delivers it. The guard sees your friend’s address (the AWS IP), which is on the list, so it lets the message in. Then your friend brings the answer back to you.
+
+Your PC is the sender. AWS is the one that talks to Shopify. Shopify only sees AWS.
+Your command, word by word
+ssh -N -D 1080 -i your-key.pem ubuntu@13.207.249.173
+Part	Meaning
+ssh	Connect safely to another computer
+-N	Do not open a command window on the server. Only make the tunnel.
+-D 1080	Open a proxy door on your PC at port 1080. Anything sent into this door goes out through the server.
+-i your-key.pem	Use your pem key as the password. Put your real file name here.
+ubuntu@13.207.249.173	Log in as user ubuntu on the AWS server
+What happens after you run it
+The terminal looks stuck and shows nothing. This is normal. The tunnel is open and working.
+Port 1080 on your PC is now a door to AWS.
+Any program you point at localhost:1080 (curl or your Node.js code) sends its traffic through AWS.
+To stop, press Ctrl + C in that terminal. The tunnel closes and everything goes back to normal.
+Two things to know
+Only programs you point at the proxy use it. Your browser and other apps are not affected. In the curl command, --socks5-hostname localhost:1080 is what tells curl to use the tunnel.
+The tunnel is encrypted. Nobody between your PC and AWS can read your data.
+Quick checklist
